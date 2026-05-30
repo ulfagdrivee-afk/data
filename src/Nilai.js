@@ -171,6 +171,7 @@ getSiswa = async () => {
   <Link to="/home" className="home-btn">
   Home
   </Link>
+  {role === "guru" && (
 
   <button
     className="add-btn"
@@ -183,8 +184,10 @@ getSiswa = async () => {
   >
     + Tambah Data
   </button>
+  )}
+
 </div>
-    {this.state.showForm && (
+     {this.state.showForm && role === "guru" && (
           <form onSubmit={this.handleSubmit} className="form">
                        <div className="form-group">
       <label>Pilih Nisn</label>
@@ -302,8 +305,8 @@ getSiswa = async () => {
                 <td>{item.nilai_akhir}</td>
                 <td>{item.kategori}</td>
 
-              <td>
-   
+            <td>
+  {role === "guru" && (
     <>
       <button
         className="action-btn edit"
@@ -312,17 +315,15 @@ getSiswa = async () => {
         Edit
       </button>
 
-      {role === "admin" && (
-    <button
-      className="action-btn delete"
-      onClick={() => this.handleDelete(item.id)}
-    >
-      Hapus
-    </button>
-  )}
+      <button
+        className="action-btn delete"
+        onClick={() => this.handleDelete(item.id)}
+      >
+        Hapus
+      </button>
     </>
-  
-</td>  
+  )}
+</td>
               </tr>
             ))}
           </tbody>

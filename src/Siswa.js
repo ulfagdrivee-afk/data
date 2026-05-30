@@ -3,7 +3,7 @@ import axios from "axios";
 import "./App.css";
 import { Link } from "react-router-dom";
 
-class Buku extends Component {
+class Siswa extends Component {
  state = {
   data: [],
   nisn: "",
@@ -294,4 +294,4 @@ class Buku extends Component {
   );
 }
 }
-export default Buku;
+export default Siswa;

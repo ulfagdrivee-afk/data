@@ -37,17 +37,18 @@ class Home extends Component {
 
             {/* MENU ADMIN */}
             {role === "admin" && (
-              <ul>
+            <div className="menu">
                 <Link to="/home/mapel">Mapel</Link>
                 <Link to="/home/siswa">Siswa</Link>
-              </ul>
+              </div>
             )}
 
             {/* MENU GURU */}
             {role === "guru" && (
-              <ul>
+                          <div className="menu">
+
                 <Link to="/home/nilai">Nilai</Link>
-              </ul>
+              </div>
             )}
 
           </div>

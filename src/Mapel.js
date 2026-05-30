@@ -111,7 +111,7 @@ const role = localStorage.getItem("role")?.toLowerCase().trim();
   </Link>
 
  {/* hanya guru yang boleh tambah data */}
-  {role === "" && (
+  {role === "admin" && (
     <button
       className="add-btn"
       onClick={() => this.setState({ showForm: true })}
