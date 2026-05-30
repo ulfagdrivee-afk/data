@@ -1,6 +1,7 @@
 import { Component } from "react";
 import axios from "axios";
 import "./App.css";
+import { Link } from "react-router-dom";
 
 class Nilai extends Component {
   state = {
@@ -25,10 +26,13 @@ class Nilai extends Component {
   }
 
 getData = async () => {
+        const token = localStorage.getItem("token");
   try {
     const res = await axios.get(
       "http://127.0.0.1:8000/api/nilai",
-
+         {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
 
     this.setState({
@@ -40,10 +44,13 @@ getData = async () => {
 };
 
 getSiswa = async () => {
+        const token = localStorage.getItem("token");
   try {
     const res = await axios.get(
       "http://127.0.0.1:8000/api/siswa",
-     
+        {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
     this.setState({
       siswa: res.data.data.siswa || [],
@@ -54,8 +61,14 @@ getSiswa = async () => {
 };
 
   getMapel = async () => {
+        const token = localStorage.getItem("token");
     try {
-      const res = await axios.get("http://127.0.0.1:8000/api/mapel");
+      const res = await axios.get("http://127.0.0.1:8000/api/mapel", 
+           {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+      );
+      
       this.setState({
         mapel: res.data.data.mapel || [],
       });
@@ -69,6 +82,7 @@ getSiswa = async () => {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+  const token = localStorage.getItem("token");
  const {
   siswa_id,
   mapel_id,
@@ -82,24 +96,30 @@ getSiswa = async () => {
         await axios.put(
           `http://127.0.0.1:8000/api/nilai/${editId}`,
           { siswa_id, mapel_id, nilai_tugas, nilai_uts, nilai_uas },
+        { headers: { Authorization: `Bearer ${token}` } }
         );
         alert("Update Nilai Successful");
       } else {
         await axios.post(
           "http://127.0.0.1:8000/api/nilai",
           {  siswa_id, mapel_id, nilai_tugas, nilai_uts, nilai_uas},
+        { headers: { Authorization: `Bearer ${token}` } }
         );
         alert("Create Nilai Successful");
       }
 
     this.setState({
-  siswa_id : "",
+ 
+  siswa_id: "",
   mapel_id: "",
   nilai_tugas: "",
-  nilai_uts:"",
-  nilai_uas:"",
-  nilai_akhir:"",
-  kategori:"",
+  nilai_uts: "",
+  nilai_uas: "",
+  nilai_akhir: "",
+  kategori: "",
+  editId: null,
+  showForm: false,
+
 });
 
       this.getData();
@@ -109,10 +129,13 @@ getSiswa = async () => {
 }
   };
  handleDelete = async (id) => {
+  const token = localStorage.getItem("token");
   try {
     await axios.delete(
       `http://127.0.0.1:8000/api/nilai/${id}`,
-    
+       {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
 
     this.setState({
@@ -142,45 +165,53 @@ getSiswa = async () => {
 
     return (
       <div className="content">
+  <div className="top-actions">
+  <Link to="/home" className="home-btn">
+  Home
+  </Link>
 
   <button
     className="add-btn"
-onClick={() =>
-  this.setState({
-    showForm: true,
-    editId: null,
+    onClick={() => this.setState({ showForm: true, editId: null,
     siswa_id: "",
     mapel_id: "",
     nilai_tugas: "",
     nilai_uts: "",
-    nilai_uas: "",
-  })
-}  >
+    nilai_uas: "", })}
+  >
     + Tambah Data
   </button>
+</div>
     {this.state.showForm && (
           <form onSubmit={this.handleSubmit} className="form">
-
+                       <div className="form-group">
+      <label>Pilih Nisn</label>
             <select
               name="siswa_id"
               value={this.state.siswa_id}
               onChange={this.handleChange}
               className="input"
             >
+        
               <option value="">Pilih Nisn</option>
               {this.state.siswa.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.nama_lengkap}   
               </option>
             ))}
+          
 
             </select>
+              </div>
+                    <div className="form-group">
+      <label>Pilih Mapel</label>
             <select
               name="mapel_id"
               value={this.state.mapel_id}
               onChange={this.handleChange}
               className="input"
             >
+           
               <option value="">Pilih Mapel</option>
           {this.state.mapel.map((m) => (
             <option key={m.id} value={m.id}>
@@ -188,7 +219,11 @@ onClick={() =>
             </option>
           ))}
             </select>
+          </div>
 
+
+             <div className="form-group">
+      <label>Nilai Tugas</label>
             <input
             type="number"
               name="nilai_tugas"
@@ -197,6 +232,9 @@ onClick={() =>
               onChange={this.handleChange}
               className="input"
             />
+            </div>
+               <div className="form-group">
+      <label>Nilai Uts</label>
             <input
             type="number"
               name="nilai_uts"
@@ -204,7 +242,9 @@ onClick={() =>
               value={this.state.nilai_uts}
               onChange={this.handleChange}
               className="input"
-            />
+            /></div>
+               <div className="form-group">
+      <label>Nilai Uas</label>
             <input
             type="number"
               name="nilai_uas"
@@ -212,7 +252,7 @@ onClick={() =>
               value={this.state.nilai_uas}
               onChange={this.handleChange}
               className="input"
-            />
+            /></div>
 
             <div className="button-group">
               <button className="submit-btn">

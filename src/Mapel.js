@@ -1,6 +1,7 @@
 import { Component } from "react";
 import axios from "axios";
 import "./App.css";
+import { Link } from "react-router-dom";
 
 class Mapel extends Component {
  state = {
@@ -11,12 +12,18 @@ class Mapel extends Component {
   errors: {},
 };
   componentDidMount() {
-    this.getData();
-  }
+ 
+
+  this.getData();
+}
 
   getData = async () => {
+        const token = localStorage.getItem("token");
     const res = await axios.get(
       "http://127.0.0.1:8000/api/mapel",
+       {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
 
     this.setState({ data: res.data.data.mapel });
@@ -28,6 +35,7 @@ class Mapel extends Component {
 
  handleSubmit = async (e) => {
   e.preventDefault();
+  const token = localStorage.getItem("token");
   const { nama_mapel, editId } = this.state;
 
   try {
@@ -35,6 +43,7 @@ class Mapel extends Component {
       await axios.put(
         `http://127.0.0.1:8000/api/mapel/${editId}`,
         {  nama_mapel},
+         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       alert("Update Mapel Successful");
@@ -43,6 +52,7 @@ class Mapel extends Component {
       await axios.post(
         "http://127.0.0.1:8000/api/mapel",
         { nama_mapel},
+         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       alert("Create mapel Successful");
@@ -76,10 +86,11 @@ class Mapel extends Component {
   };
 
   handleDelete = async (id) => {
+  const token = localStorage.getItem("token");
   try {
     await axios.delete(
       `http://127.0.0.1:8000/api/mapel/${id}`,
-     
+      { headers: { Authorization: `Bearer ${token}` } }
     );
      alert("Delete mapel Successful");
     this.setState({
@@ -95,15 +106,23 @@ class Mapel extends Component {
 
   return (
     <div className="content">
-      <button
-        className="add-btn"
-        onClick={() => this.setState({ showForm: true })}>
-        + Tambah Data
-      </button>
+      <div className="top-actions">
+  <Link to="/home" className="home-btn">
+   Home
+  </Link>
+
+  <button
+    className="add-btn"
+    onClick={() => this.setState({ showForm: true })}
+  >
+    + Tambah Data
+  </button>
+</div>
 
       {this.state.showForm && (
         <form onSubmit={this.handleSubmit}>
-
+          <div className="form-group">
+      <label>Nama Mapel</label>
           <input
             name="nama_mapel"
             placeholder="Nama Mapel"
@@ -111,6 +130,7 @@ class Mapel extends Component {
             onChange={this.handleChange}
             className="input"
           />
+          </div>
 
           {this.state.errors.nama_mapel && (
             <p className="error">
