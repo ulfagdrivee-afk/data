@@ -20,6 +20,7 @@ class Nilai extends Component {
   };
 
   componentDidMount() {
+    
     this.getData();
     this.getSiswa();
     this.getMapel();
@@ -162,6 +163,7 @@ getSiswa = async () => {
   };
 
   render() {
+                  const role = localStorage.getItem("role")?.toLowerCase().trim();
 
     return (
       <div className="content">
@@ -310,12 +312,14 @@ getSiswa = async () => {
         Edit
       </button>
 
-      <button
-        className="action-btn delete"
-        onClick={() => this.handleDelete(item.id)}
-      >
-        Hapus
-      </button>
+      {role === "admin" && (
+    <button
+      className="action-btn delete"
+      onClick={() => this.handleDelete(item.id)}
+    >
+      Hapus
+    </button>
+  )}
     </>
   
 </td>  

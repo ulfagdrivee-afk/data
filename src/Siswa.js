@@ -16,6 +16,7 @@ class Buku extends Component {
 };
 
   componentDidMount() {
+    
   this.getData();
 }
 

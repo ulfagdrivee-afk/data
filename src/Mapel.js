@@ -12,7 +12,6 @@ class Mapel extends Component {
   errors: {},
 };
   componentDidMount() {
- 
 
   this.getData();
 }
@@ -103,7 +102,7 @@ class Mapel extends Component {
 };
 
  render() {
-
+const role = localStorage.getItem("role")?.toLowerCase().trim();
   return (
     <div className="content">
       <div className="top-actions">
@@ -111,15 +110,18 @@ class Mapel extends Component {
    Home
   </Link>
 
-  <button
-    className="add-btn"
-    onClick={() => this.setState({ showForm: true })}
-  >
-    + Tambah Data
-  </button>
+ {/* hanya guru yang boleh tambah data */}
+  {role === "" && (
+    <button
+      className="add-btn"
+      onClick={() => this.setState({ showForm: true })}
+    >
+      + Tambah Data
+    </button>
+  )}
 </div>
 
-      {this.state.showForm && (
+      {this.state.showForm && role === "admin" && (
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
       <label>Nama Mapel</label>
@@ -182,23 +184,25 @@ class Mapel extends Component {
                 <td>{item.nama_mapel}</td>
                
 
-                <td>
+               <td>
+  {role === "admin" && (
+    <>
+      <button
+        className="action-btn edit"
+        onClick={() => this.handleEdit(item)}
+      >
+        Edit
+      </button>
 
-                  <button
-                    className="action-btn edit"
-                    onClick={() => this.handleEdit(item)}
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    className="action-btn delete"
-                    onClick={() => this.handleDelete(item.id)}
-                  >
-                    Hapus
-                  </button>
-
-                </td>
+      <button
+        className="action-btn delete"
+        onClick={() => this.handleDelete(item.id)}
+      >
+        Hapus
+      </button>
+    </>
+  )}
+</td>
 
               </tr>
             ))}
